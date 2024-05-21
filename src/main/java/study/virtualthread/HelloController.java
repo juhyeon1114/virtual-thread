@@ -23,6 +23,7 @@ public class HelloController {
 
     @GetMapping("/query")
     public String query() {
+//        String string = jdbcTemplate.queryForList("select pg_sleep(1)").toString();
         String string = jdbcTemplate.queryForList("select sleep(1)").toString();
         log.info(string);
         return string;
