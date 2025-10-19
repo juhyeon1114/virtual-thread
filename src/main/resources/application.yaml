@@ -1,0 +1,30 @@
+server:
+  tomcat:
+    threads:
+      max: 100
+      min-spare: 10
+spring:
+  threads:
+    virtual:
+      enabled: true
+  application:
+    name: virtual-thread-app
+  profiles:
+    active: local
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/vt
+    username: root
+    password: 1234
+    hikari:
+      maximum-pool-size: 100
+      minimum-idle: 100
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
