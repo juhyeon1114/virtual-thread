@@ -8,6 +8,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,12 @@ public class PostController {
 
 	private final PostServiceImpl postService;
 
+	@GetMapping
+	public void sleep() throws InterruptedException {
+		log.info("sleeping...");
+		Thread.sleep(1000);
+	}
+
 	@PostMapping
 	public void writeRandomPost() {
 		Post post = postService.writeRandomPost();
@@ -35,11 +42,7 @@ public class PostController {
 	public void writeRandomPosts(int count, ExecutorService executor) {
 		List<CompletableFuture<Post>> futures = new ArrayList<>();
 		for (int i = 0; i < count; i++) {
-			if (executor == null) {
-				futures.add(CompletableFuture.supplyAsync(postService::writeRandomPost));
-			} else {
-				futures.add(CompletableFuture.supplyAsync(postService::writeRandomPost, executor));
-			}
+			futures.add(CompletableFuture.supplyAsync(postService::writeRandomPost, executor));
 		}
 		String result = allOf(futures.toArray(new CompletableFuture[0]))
 			.thenApply(v -> {
@@ -60,7 +63,7 @@ public class PostController {
 	public void writeRandomPostByPlatformThread(
 		@PathVariable int count
 	) {
-		writeRandomPosts(count, null);
+		writeRandomPosts(count, Executors.newFixedThreadPool(100));
 	}
 
 	@PostMapping("/{count}/virtual")
