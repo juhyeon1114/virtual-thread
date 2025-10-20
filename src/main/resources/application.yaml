@@ -17,3 +17,13 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  metrics:
+    enable:
+      jvm: true
+      system: true
+      process: true
