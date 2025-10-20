@@ -28,8 +28,8 @@ public class PostController {
 
 	@PostMapping
 	public void writeRandomPost() {
-		log.info("글 생성");
-		postService.writeRandomPost();
+		Post post = postService.writeRandomPost();
+		log.info("글 생성: {}", post.getId());
 	}
 
 	public void writeRandomPosts(int count, ExecutorService executor) {
@@ -50,6 +50,7 @@ public class PostController {
 					}
 					sb.append(futures.get(i).join().getId());
 				}
+				log.info(sb.toString());
 				return sb.toString();
 			}).join();
 		log.info(result);
